@@ -73,6 +73,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link text-dark" href="/">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="/catalogo/">Catálogo</a></li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-medium" href="{% url 'contacto' %}">Contacto</a>
+                    </li>
                     
                     <!-- Menú de Reportes ORM (Exclusivo para Superusuario) -->
                     {% if request.user.is_superuser %}

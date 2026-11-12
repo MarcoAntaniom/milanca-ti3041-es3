@@ -227,3 +227,23 @@ def reporte_stock_critico(request):
     productos_criticos = Producto.objects.filter(stock__lte=5).order_by('stock', 'nombre')
     
     return render(request, 'reporte_stock.html', {'productos': productos_criticos})
+
+def contacto_cliente(request):
+    # Funcionalidad con sesiones: Contador de visitas a la sección de contacto
+    visitas = request.session.get('visitas_contacto', 0)
+    request.session['visitas_contacto'] = visitas + 1
+
+    if request.method == 'POST':
+        form = ConsultaClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Puedes redirigir al inicio o mostrar un mensaje de éxito
+            return redirect('/catalogo/') 
+    else:
+        form = ConsultaClienteForm()
+
+    context = {
+        'form': form,
+        'visitas_contacto': request.session['visitas_contacto']
+    }
+    return render(request, 'contacto.html', context)
