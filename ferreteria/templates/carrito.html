@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Carrito | FerreteríaPro{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">Carrito de Compras</h2>
+    
+    {% if items_carrito %}
+    <div class="row g-5" id="contenedor-carrito-activo">
+        <div class="col-lg-8">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="text-muted small text-uppercase">
+                        <tr>
+                            <th scope="col" class="fw-normal border-bottom pb-3">Producto</th>
+                            <th scope="col" class="fw-normal border-bottom pb-3">Precio</th>
+                            <th scope="col" class="fw-normal border-bottom pb-3" style="width: 130px;">Cant.</th>
+                            <th scope="col" class="fw-normal border-bottom pb-3 text-end">Subtotal</th>
+                            <th scope="col" class="border-bottom pb-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        {% for item in items_carrito %}
+                        <tr class="fila-producto" data-id="{{ item.producto.id }}" data-precio="{{ item.producto.precio }}" data-stock="{{ item.producto.stock }}">
+                            <td class="py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width: 60px; height: 60px;" class="border bg-white p-1">
+                                        {% if item.producto.imagen %}
+                                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-100 h-100 object-fit-contain">
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-normal mb-1">{{ item.producto.nombre }}</h6>
+                                        <small class="text-muted">Stock: <span class="stock-maximo">{{ item.producto.stock }}</span></small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted py-3">${{ item.producto.precio }}</td>
+                            <td class="py-3">
+                                <div class="input-group input-group-sm rounded-0">
+                                    <button class="btn btn-outline-secondary btn-restar rounded-0 border-end-0" type="button">-</button>
+                                    <input type="text" class="form-control text-center input-cantidad border-secondary shadow-none bg-white" value="{{ item.cantidad }}" readonly>
+                                    <button class="btn btn-outline-secondary btn-sumar rounded-0 border-start-0" type="button">+</button>
+                                </div>
+                            </td>
+                            <td class="fw-medium text-end py-3 subtotal-fila">${{ item.subtotal }}</td>
+                            <td class="text-end py-3">
+                                <button type="button" class="btn btn-link text-muted p-0 btn-eliminar-fila">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                <a href="/catalogo/" class="text-dark text-decoration-none small fw-medium">
+                    &larr; Volver al catálogo
+                </a>
+                <button type="button" id="btn-vaciar-todo" class="btn btn-link text-danger text-decoration-none p-0 small">
+                    Vaciar carrito
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="bg-light p-4">
+                <h5 class="fw-bold mb-4">Resumen</h5>
+                <div class="d-flex justify-content-between mb-3 text-muted small">
+                    <span>Subtotal</span>
+                    <span id="resumen-neto">${{ subtotal_neto|default:0 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 text-muted small">
+                    <span>IVA (19%)</span>
+                    <span id="resumen-iva">${{ total_iva|default:0 }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4 text-muted small pb-3 border-bottom border-secondary-subtle">
+                    <span>Despacho</span>
+                    <span>Gratis</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="fw-bold">Total</span>
+                    <span class="fs-5 fw-bold" id="resumen-total">${{ total_general|default:0 }}</span>
+                </div>
+                <button type="button" id="btn-proceder-pago" class="btn btn-dark w-100 rounded-0 py-2">
+                    Proceder al Pago
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="carrito-vacio-aviso" class="text-center py-5 {% if items_carrito %}d-none{% endif %}">
+        <p class="text-muted mb-3">Tu carrito está vacío.</p>
+        <a href="/catalogo/" class="btn btn-outline-dark rounded-0 px-4">Ir al Catálogo</a>
+    </div>
+</div>
+{% endblock %}

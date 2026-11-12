@@ -1,0 +1,61 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+    {% if object %}Editar Producto{% else %}Nuevo Producto{% endif %} | FerreteríaPro
+{% endblock %} 
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="bg-white p-4 p-md-5 border">
+                <h3 class="fw-bold mb-4">
+                    {% if object %}Editar Producto{% else %}Agregar Nuevo Producto{% endif %}
+                </h3>
+                
+                <form method="post" enctype="multipart/form-data" id="crud-form">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-4">
+                            <label class="form-label text-dark fw-medium small mb-1">{{ field.label }}</label>
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <div class="form-text small text-muted">{{ field.help_text }}</div>
+                            {% endif %}
+                            
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                        <a href="catalogo/" class="text-dark text-decoration-none small fw-medium">
+                            &larr; Volver al catálogo
+                        </a>
+                        <button type="submit" class="btn btn-dark rounded-0 px-4 py-2">
+                            {% if object %}Guardar Cambios{% else %}Crear Producto{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para darle estilo Bootstrap minimalista a los inputs nativos de Django -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const formElements = document.querySelectorAll('#crud-form input, #crud-form select, #crud-form textarea');
+        formElements.forEach(function(element) {
+            if (element.type !== 'checkbox' && element.type !== 'radio') {
+                element.classList.add('form-control', 'rounded-0', 'shadow-none', 'border-secondary-subtle', 'bg-light');
+            } else {
+                element.classList.add('form-check-input', 'rounded-0');
+            }
+        });
+    });
+</script>
+{% endblock %}
