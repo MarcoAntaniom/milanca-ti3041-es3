@@ -5,6 +5,8 @@ from decimal import Decimal
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db import transaction
+from django.db.models import Count, Sum, Avg
+from .forms import ConsultaClienteForm
 
 # Create your views here.
 
@@ -209,3 +211,19 @@ class ProductoDeleteView(DeleteView):
     model = Producto
     template_name = 'producto_confirm_delete.html'
     success_url = reverse_lazy('catalogo')
+    
+def reporte_agrupado(request):
+    # Reporte 1: Agrupa por categoría y calcula el total de stock y precio promedio
+    resumen_categorias = Producto.objects.values('categoria__nombre').annotate(
+        cantidad_productos=Count('id'),
+        total_stock=Sum('stock'),
+        precio_promedio=Avg('precio')
+    ).order_by('categoria__nombre')
+    
+    return render(request, 'reporte_agrupado.html', {'reportes': resumen_categorias})
+
+def reporte_stock_critico(request):
+    # Reporte 2: Filtra productos con stock menor o igual a 5 (crítico) y los ordena
+    productos_criticos = Producto.objects.filter(stock__lte=5).order_by('stock', 'nombre')
+    
+    return render(request, 'reporte_stock.html', {'productos': productos_criticos})

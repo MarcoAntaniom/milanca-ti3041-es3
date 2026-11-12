@@ -1,0 +1,51 @@
+{% extends 'base.html' %} 
+
+{% block title %}Iniciar Sesión | FerreteríaPro{% endblock %} 
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="bg-white p-4 p-md-5 border mt-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-circle display-4 text-dark mb-3"></i>
+                    <h3 class="fw-bold mb-0">Acceso</h3>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger small rounded-0 border-0 mb-4">
+                        Usuario o contraseña incorrectos. Inténtalo de nuevo.
+                    </div>
+                    {% endif %}
+                    
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-medium small mb-1">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-dark w-100 rounded-0 py-2 mt-3">
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para darle estilo Bootstrap al formulario nativo de Django -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const formInputs = document.querySelectorAll('form input');
+        formInputs.forEach(function(input) {
+            if (input.type !== 'hidden') {
+                input.classList.add('form-control', 'rounded-0', 'shadow-none', 'border-secondary-subtle', 'bg-light');
+            }
+        });
+    });
+</script>
+{% endblock %}
